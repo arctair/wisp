@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://models/simplomatic.gltf" type="PackedScene" id=1]
+
+[node name="root" type="Spatial"]
+
+[node name="simplomatic" parent="." instance=ExtResource( 1 )]
