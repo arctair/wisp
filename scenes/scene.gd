@@ -12,6 +12,9 @@ func _ready():
 
 
 func _physics_process(delta):
+	if not Input.is_action_pressed("left_mouse_button"):
+		return
+	
 	var camera = $Camera
 	var mouse_position = get_viewport().get_mouse_position()
 	var from = camera.project_ray_origin(mouse_position)
