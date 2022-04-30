@@ -1,19 +1,15 @@
 extends Spatial
 
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
-
-
-# Called when the node enters the scene tree for the first time.
+var rail_pattern = RegEx.new()
 func _ready():
-	pass # Replace with function body.
+	rail_pattern.compile("@?rail(@\\d+)?")
 
 
 func _physics_process(delta):
 	process_click_and_drag(delta)
 	process_duplicate(delta)
+
 
 var selected : Spatial
 func process_click_and_drag(delta):
@@ -32,7 +28,7 @@ func process_click_and_drag(delta):
 	var mouse_position_3d = mouse_ray[1]
 	var mouse_normal = mouse_ray[2]
 	
-	if not container or container.collider.name != "rail":
+	if not container or not rail_pattern.search(container.collider.name):
 		set_parent(selected, self)
 		selected.transform.origin = mouse_position_3d + mouse_normal * 1
 		return
@@ -45,12 +41,14 @@ func process_click_and_drag(delta):
 	set_parent(selected, rail)
 	selected.transform.origin = Vector3.UP * (u + 0.5) * metersPerUnit
 
+
 func set_parent(target, parent):
 	if target.get_parent() == parent: return
 	target.get_parent().remove_child(target)
 	parent.add_child(target)
 
 
+var rail_scene = load("res://scenes/rail.tscn")
 func process_duplicate(delta): 
 	if not Input.is_action_just_pressed("duplicate"):
 		return
@@ -60,8 +58,8 @@ func process_duplicate(delta):
 	if not container: return
 		
 	var spatial = container.collider as Spatial
-	selected = spatial
-	spatial.get_parent().add_child(spatial.duplicate())
+	selected = rail_scene.instance() if spatial.name == "rail" else spatial.duplicate()
+	spatial.get_parent().add_child(selected)
 
 func intersect_mouse_ray(exclude = [], camera = $Camera, distance = 1000):
 	var mouse_position = get_viewport().get_mouse_position()
