@@ -30,7 +30,7 @@ func process_click_and_drag(delta):
 	
 	if not container or not rail_pattern.search(container.collider.name):
 		set_parent(selected, self)
-		selected.transform.origin = mouse_position_3d + mouse_normal * 1
+		selected.transform.origin = mouse_position_3d + mouse_normal * 2
 		return
 		
 	var rail = container.collider as Spatial
