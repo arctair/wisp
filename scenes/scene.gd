@@ -23,4 +23,5 @@ func _physics_process(delta):
 		var u = round((container.position.y - $rail_12u.transform.origin.y) / 0.04445 - 0.5) + 7
 		u = clamp(u, 1, 12)
 		$rail_12u/simplomatic.transform.origin = Vector3(0, (u - 7) * 0.04445 + 0.04445 / 2, 0)
-
+	else:
+		$rail_12u/simplomatic.transform.origin = from + camera.project_ray_normal(mouse_position) * 1
