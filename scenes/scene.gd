@@ -60,7 +60,7 @@ func process_duplicate(delta):
 	if not container: return
 		
 	var spatial = container.collider as Spatial
-	selected = rail_scene.instance() if spatial.name == "rail" else spatial.duplicate()
+	selected = rail_scene.instance() if rail_pattern.search(spatial.name) else spatial.duplicate()
 	spatial.get_parent().add_child(selected)
 
 func intersect_mouse_ray(exclude = [], camera = $Camera, distance = 1000):
