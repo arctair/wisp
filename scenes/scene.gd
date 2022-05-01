@@ -1,22 +1,19 @@
 extends Spatial
 
 
-var rail_pattern = RegEx.new()
-func _ready():
-	rail_pattern.compile("@?rail(@\\d+)?")
-
-
 func _physics_process(delta):
-	process_click_and_drag(delta)
-	process_duplicate(delta)
+	process_click_and_drag()
+	process_duplicate()
 
 
 var selected : Spatial
-func process_click_and_drag(delta):
+func process_click_and_drag():
 	if Input.is_action_just_pressed("click_and_drag"):
 		var container = intersect_mouse_ray()[0]
 		if not container: return
-		selected = container.collider
+		var node = container.collider as Node
+		if node.is_in_group("movable"):
+			selected = node
 		
 	if Input.is_action_just_released("click_and_drag") or Input.is_action_just_released("duplicate"):
 		selected = null
@@ -28,20 +25,23 @@ func process_click_and_drag(delta):
 	var mouse_position_3d = mouse_ray[1]
 	var mouse_normal = mouse_ray[2]
 	
-	if not container or not rail_pattern.search(container.collider.name):
+	if container and selected.is_in_group("simplomatic") and container.collider.is_in_group("rail"):
+		var rail = container.collider as Spatial
+		var metersPerUnit = 0.04445
+		var unitCount = rail.get("unitCount")
+		var u = round((container.position.y - rail.transform.origin.y) / metersPerUnit - 0.5)
+		u = clamp(u, -unitCount / 2, unitCount / 2 - 1)
+		set_parent(selected, rail)
+		selected.transform.origin = Vector3.UP * (u + 0.5) * metersPerUnit
+		selected.rotation = Vector3.ZERO
+	elif container and selected.is_in_group("plug") and container.collider.is_in_group("ports"):
+		var ports = container.collider as Spatial
+		selected.transform.origin = Vector3.ZERO
+		set_parent(selected, ports)
+	else:
 		set_parent(selected, self)
 		selected.transform.origin = mouse_position_3d + mouse_normal * 2
 		selected.transform = selected.transform.looking_at(selected.transform.origin + mouse_normal - mouse_normal.y * Vector3.UP, Vector3.UP)
-		return
-		
-	var rail = container.collider as Spatial
-	var metersPerUnit = 0.04445
-	var unitCount = rail.get("unitCount")
-	var u = round((container.position.y - rail.transform.origin.y) / metersPerUnit - 0.5)
-	u = clamp(u, -unitCount / 2, unitCount / 2 - 1)
-	set_parent(selected, rail)
-	selected.transform.origin = Vector3.UP * (u + 0.5) * metersPerUnit
-	selected.rotation = Vector3.ZERO
 
 
 func set_parent(target, parent):
@@ -50,18 +50,31 @@ func set_parent(target, parent):
 	parent.add_child(target)
 
 
-var rail_scene = load("res://scenes/rail.tscn")
-func process_duplicate(delta): 
-	if not Input.is_action_just_pressed("duplicate"):
-		return
+func process_duplicate(): 
+	if not Input.is_action_just_pressed("duplicate"): return
 	
 	var container = intersect_mouse_ray()[0]
-	
 	if not container: return
-		
-	var spatial = container.collider as Spatial
-	selected = rail_scene.instance() if rail_pattern.search(spatial.name) else spatial.duplicate()
-	spatial.get_parent().add_child(selected)
+	
+	var node = container.collider as Node
+	var duplicate = try_duplicate(node)
+	if not duplicate: return
+	
+	node.get_parent().add_child(duplicate)
+	selected = duplicate
+	
+	
+var duplicableScenesByGroupName = {
+	"rail":  load("res://scenes/rail.tscn"),
+	"simplomatic": load("res://scenes/simplomatic.tscn"),
+	"plug": load("res://scenes/plug.tscn")
+}
+func try_duplicate(node : Node):
+	for group_name in duplicableScenesByGroupName:
+		if node.is_in_group(group_name):
+			return duplicableScenesByGroupName[group_name].instance()
+	return null
+
 
 func intersect_mouse_ray(exclude = [], camera = $Camera, distance = 1000):
 	var mouse_position = get_viewport().get_mouse_position()

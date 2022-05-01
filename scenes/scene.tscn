@@ -1,15 +1,16 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://scenes/simplomatic.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/rail.tscn" type="PackedScene" id=2]
 [ext_resource path="res://scenes/scene.gd" type="Script" id=3]
+[ext_resource path="res://scenes/plug.tscn" type="PackedScene" id=4]
 
 [node name="root" type="Spatial"]
 script = ExtResource( 3 )
 
 [node name="Camera" type="Camera" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2 )
-fov = 47.1
+fov = 25.0
 
 [node name="DirectionalLight" type="DirectionalLight" parent="."]
 transform = Transform( 0.807959, 0.464149, 0.362998, 0, -0.616047, 0.78771, 0.589239, -0.636437, -0.49774, 0, 1.38792, 0 )
@@ -18,3 +19,6 @@ transform = Transform( 0.807959, 0.464149, 0.362998, 0, -0.616047, 0.78771, 0.58
 
 [node name="simplomatic" parent="rail" instance=ExtResource( 1 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.76837e-07, 0 )
+
+[node name="plug" parent="." instance=ExtResource( 4 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.141536, -0.171032, 0.0099826 )

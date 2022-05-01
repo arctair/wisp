@@ -6,7 +6,7 @@
 [sub_resource type="BoxShape" id=1]
 extents = Vector3( 0.261, 0.267, 1 )
 
-[node name="rail" type="Area"]
+[node name="rail" type="Area" groups=["movable", "rail"]]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.76837e-07, 0 )
 script = ExtResource( 2 )
 unitCount = 12
