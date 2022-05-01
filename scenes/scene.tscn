@@ -8,7 +8,7 @@
 script = ExtResource( 3 )
 
 [node name="Camera" type="Camera" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.49041 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2 )
 fov = 47.1
 
 [node name="DirectionalLight" type="DirectionalLight" parent="."]
@@ -16,4 +16,5 @@ transform = Transform( 0.807959, 0.464149, 0.362998, 0, -0.616047, 0.78771, 0.58
 
 [node name="rail" parent="." instance=ExtResource( 2 )]
 
-[node name="simplomatic" parent="." instance=ExtResource( 1 )]
+[node name="simplomatic" parent="rail" instance=ExtResource( 1 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.76837e-07, 0 )
