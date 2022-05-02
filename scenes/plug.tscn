@@ -1,12 +1,14 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://models/plug.gltf" type="PackedScene" id=1]
+[ext_resource path="res://scenes/plug.gd" type="Script" id=2]
 
 [sub_resource type="CapsuleShape" id=1]
 radius = 0.00901202
 height = 0.0164714
 
 [node name="plug" type="StaticBody" groups=["movable", "plug"]]
+script = ExtResource( 2 )
 
 [node name="model" parent="." instance=ExtResource( 1 )]
 

@@ -13,7 +13,7 @@ extents = Vector3( 1, 1, 1.12844 )
 [node name="model" parent="." instance=ExtResource( 1 )]
 
 [node name="ports" type="StaticBody" parent="." groups=["ports"]]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.15, 0, 0.008 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.15, -0.000308409, 0.008 )
 
 [node name="CollisionShape" type="CollisionShape" parent="ports"]
 shape = SubResource( 2 )
