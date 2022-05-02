@@ -12,6 +12,8 @@ func process_click_and_drag():
 		var container = intersect_mouse_ray()[0]
 		if not container: return
 		var node = container.collider as Node
+		if node.is_in_group("ports"):
+			node = node.get_parent()
 		if node.is_in_group("movable"):
 			selected = node
 		
@@ -36,8 +38,20 @@ func process_click_and_drag():
 		selected.rotation = Vector3.ZERO
 	elif container and selected.is_in_group("plug") and container.collider.is_in_group("ports"):
 		var ports = container.collider as Spatial
-		selected.transform.origin = Vector3.ZERO
+		var d = container.position - ports.global_transform.origin
+		var portWidth = 0.017
+		var portHeight = 0.017
+		var port_x = clamp(round(d.x / portWidth - 0.5), -4, 3)
+		var port_y = clamp(round(d.y / portHeight - 0.5), -1, 0)
 		set_parent(selected, ports)
+		
+		selected.transform = ports.transform.translated(
+			Vector3(
+				(0.5 + port_x) * portWidth,
+				(0.5 + port_y) * portHeight,
+				0
+			) - ports.transform.origin
+		)
 	else:
 		set_parent(selected, self)
 		selected.transform.origin = mouse_position_3d + mouse_normal * 2
