@@ -14,6 +14,10 @@ config/name="wisp"
 run/main_scene="res://scenes/scene.tscn"
 config/icon="res://icon.png"
 
+[global]
+
+export=true
+
 [input]
 
 click_and_drag={

@@ -1,0 +1,19 @@
+#!/bin/zsh
+case $1 in
+build)
+  mkdir -p build
+  revision=wisp-dev-`git rev-parse --short HEAD`
+  godot --export "Linux/X11" build/$revision
+  tar czvf build/$revision.tar.gz build/$revision
+  godot --export "Windows Desktop" build/$revision.exe
+  zip build/$revision.zip build/$revision.exe
+  ;;
+sync)
+  rsync -avr build/ yagni:faster/files.wisp.cruftbusters.com/www --progress
+  ;;
+update-dns)
+  upsert-resource-record-set `lookup-hosted-zone-id cruftbusters.com` wisp.cruftbusters.com A 300 50.35.75.152
+*)
+  echo usage: ./scripts "(build|sync)"
+  ;;
+esac
