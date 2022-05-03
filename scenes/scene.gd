@@ -7,6 +7,7 @@ func _physics_process(delta):
 
 
 var selected : Spatial
+var selected_offset : Vector3
 func process_click_and_drag():
 	if Input.is_action_just_pressed("click_and_drag"):
 		var container = intersect_mouse_ray()[0]
@@ -16,6 +17,7 @@ func process_click_and_drag():
 			node = node.get_parent()
 		if node.is_in_group("movable"):
 			selected = node
+			selected_offset = selected.transform.origin - container.position
 		
 	if Input.is_action_just_released("click_and_drag") or Input.is_action_just_released("duplicate"):
 		selected = null
@@ -25,8 +27,8 @@ func process_click_and_drag():
 	var exclude = colliders(selected)
 	var mouse_ray = intersect_mouse_ray(exclude)
 	var container = mouse_ray[0]
-	var mouse_position_3d = mouse_ray[1]
-	var mouse_normal = mouse_ray[2]
+	var camera_position = mouse_ray[1]
+	var camera_normal = mouse_ray[2]
 	
 	if container and selected.is_in_group("simplomatic") and container.collider.is_in_group("rail"):
 		var rail = container.collider as Spatial
@@ -55,8 +57,8 @@ func process_click_and_drag():
 		)
 	else:
 		set_parent(selected, self)
-		selected.transform.origin = mouse_position_3d + mouse_normal * 2
-		selected.transform = selected.transform.looking_at(selected.transform.origin + mouse_normal - mouse_normal.y * Vector3.UP, Vector3.UP)
+		selected.transform.origin = camera_position + camera_normal * 2 + selected_offset
+
 
 
 func colliders(spatial : Spatial):
