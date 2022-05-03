@@ -22,7 +22,8 @@ func process_click_and_drag():
 	
 	if not selected: return
 	
-	var mouse_ray = intersect_mouse_ray([selected])
+	var exclude = colliders(selected)
+	var mouse_ray = intersect_mouse_ray(exclude)
 	var container = mouse_ray[0]
 	var mouse_position_3d = mouse_ray[1]
 	var mouse_normal = mouse_ray[2]
@@ -56,6 +57,16 @@ func process_click_and_drag():
 		set_parent(selected, self)
 		selected.transform.origin = mouse_position_3d + mouse_normal * 2
 		selected.transform = selected.transform.looking_at(selected.transform.origin + mouse_normal - mouse_normal.y * Vector3.UP, Vector3.UP)
+
+
+func colliders(spatial : Spatial):
+	var colliders = []
+	for child in spatial.get_children():
+		if child is CollisionShape:
+			colliders.append(spatial)
+		else:
+			colliders.append_array(colliders(child))
+	return colliders
 
 
 func set_parent(target, parent):
